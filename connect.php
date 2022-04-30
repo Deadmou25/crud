@@ -9,12 +9,17 @@ $userRepository = new UserRepository($connector);
 $controller = new Controller($userRepository);
 
 $error = '';
+
 if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
     $result = $controller->signUp();
-    if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-        die(json_encode($result));
-    }
     $error = $result['message'];
+    if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
+        header('Content-Type: application/json');
+        $res = ['error' =>['message'=>$error]];
+        http_response_code($result['status']);
+        die(json_encode($res));
+    }
+
 }
 
 

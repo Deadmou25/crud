@@ -19,6 +19,12 @@ class Controller
         $mobile = filter_input(INPUT_POST, 'mobile', FILTER_SANITIZE_NUMBER_INT);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
+        if(!$name||!$email||!$mobile||!$password){
+            return [
+                'message' => 'Заполните поля',
+                'status' => 400
+            ];
+        }
 
         $existingUser = $this->userRepository->getByEmail($email);
         if (!is_null($existingUser)) {
