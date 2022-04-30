@@ -1,6 +1,6 @@
 <?php
-include 'DataBaseConnection.php';
-require('UserModel.php');
+include_once 'DataBaseConnection.php';
+include_once 'UserModel.php';
 
 class UserRepository
 {
@@ -12,23 +12,12 @@ class UserRepository
         $this->connector = $connector;
     }
 
-    public function signUp(string $name, string $email, int $mobile, string $password)
+    public function insert(string $name, string $email, int $mobile, string $password)
     {
 
-        $existingUser = $this->getByEmail($email);
-        if(!is_null($existingUser)){
-            echo "Пользователь уже существует";
-            return;
-        }
-        $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = ("INSERT INTO user (`name`, `email`, `mobile`,`password`) VALUES(?,?,?,?)");
         $query = $this->connector->getPDO()->prepare($sql);
         $query->execute([$name, $email, $mobile, $password]);
-        echo "Пользователь создан";
-    }
-
-    public function singIn()
-    {
 
     }
 
@@ -38,7 +27,7 @@ class UserRepository
         $query = $this->connector->getPDO()->prepare($sql);
         $query->execute([$email]);
         $result = $query->fetchObject();
-        if(!$result){
+        if (!$result) {
             return null;
         }
         $userModel = new UserModel();

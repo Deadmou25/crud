@@ -1,26 +1,23 @@
 <?php
-/**
- * @var PDO $pdo
- */
 
-require('UserRepository.php');
+include_once 'UserRepository.php';
+include_once 'Controller.php';
 
+$connector = new DataBaseConnection();
+$connector->connect();
+$userRepository = new UserRepository($connector);
+$controller = new Controller($userRepository);
 
-try {
-    if (($_SERVER['REQUEST_METHOD']=='POST')) {
-        $name = filter_input(INPUT_POST,'name',FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL);
-        $mobile = filter_input(INPUT_POST,'mobile',FILTER_SANITIZE_NUMBER_INT);
-        $password = filter_input(INPUT_POST,'password', FILTER_SANITIZE_STRING);
-        $connector = new DataBaseConnection();
-        $connector->connect();
-        $userRepository = new UserRepository($connector);
-        $userRepository->signUp($name,$email,$mobile,$password);
-
+$error = '';
+if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
+    $result = $controller->signUp();
+    if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+        die(json_encode($result));
     }
-} catch (PDOException $e) {
-    die($e->getMessage());
+    $error = $result['message'];
 }
+
+
 ?>
 
 <!doctype html>
@@ -36,6 +33,7 @@ try {
 </head>
 <body>
 <div class="container">
+    <p><?=$error?></p>
     <form class="my-5" method="post" action="connect.php">
         <div class="mb-3">
             <label>Name</label>
