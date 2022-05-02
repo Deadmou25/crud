@@ -9,7 +9,6 @@ class Controller
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-
     }
 
     public function signUp(): array
@@ -35,7 +34,6 @@ class Controller
         }
         $password = password_hash($password, PASSWORD_DEFAULT);
         $this->userRepository->insert($name, $email, $mobile, $password);
-        echo "";
         return [
             'message' => 'Пользователь создан',
             'status' => 201
@@ -44,6 +42,38 @@ class Controller
 
     public function singIn()
     {
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
+        if(!$email||!$password){
+            return [
+                'message' => 'Заполните поля',
+                'status' => 400
+            ];
+        }
+
+        $existingUser = $this->userRepository->getByEmail($email);
+        if (is_null($existingUser)) {
+            return [
+                'message' => 'Пользователя не существует',
+                'status' => 404
+            ];
+        }
+
+        if(!password_verify($password,$existingUser->password)){
+            return [
+                'message' => 'Неверный логин или пароль',
+                'status' => 403
+            ];
+
+        }
+
+        $this->userRepository->insertToken($existingUser->id);
+
+        //TODO Вернуть токен или записать его в куки
+        return [
+            'message' => 'В вас успешно вошли',
+            'status' => 200
+        ];
     }
 }
