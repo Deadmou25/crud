@@ -20,6 +20,12 @@ class UserRepository
         $query->execute([$name, $email, $mobile, $password]);
     }
 
+    public function get(string $email,string $password){
+        $sql = "SELECT email,password FROM user";
+        $query = $this->connector->getPDO()->prepare($sql);
+        $query->execute([$email, $password]);
+    }
+
     public function insertToken(int $userId): string
     {
         $sql = ("INSERT INTO auth_tokens (token,user_id) VALUES(?,?)");

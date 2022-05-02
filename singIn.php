@@ -10,7 +10,7 @@ $controller = new Controller($userRepository);
 
 $error = '';
 
-if (($_SERVER['REQUEST_METHOD'] == 'GET')) {
+if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
     $result = $controller->singIn();
     $error = $result['message'];
     if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
@@ -39,7 +39,8 @@ if (($_SERVER['REQUEST_METHOD'] == 'GET')) {
 </head>
 <body>
 <div class="container">
-    <form class="my-5" method="get" action="singIn.php">
+    <p><?=$error?></p>
+    <form class="my-5" method="post" action="singIn.php">
         <div class="mb-3">
             <label>email</label>
             <input type="text" class="form-control" name="email" autocomplete="off">
@@ -48,7 +49,8 @@ if (($_SERVER['REQUEST_METHOD'] == 'GET')) {
             <label>password</label>
             <input type="password" class="form-control" name="password" autocomplete="off">
         </div>
-        <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+        <button type="submit" class="btn btn-primary" name="submit">Войти</button>
+        <button type="submit" class="btn btn-primary" name="submit"><a href="connect.php" style="color:white;text-decoration: none">Регистрация</a></button>
     </form>
 </div>
 

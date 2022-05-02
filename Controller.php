@@ -18,7 +18,7 @@ class Controller
         $mobile = filter_input(INPUT_POST, 'mobile', FILTER_SANITIZE_NUMBER_INT);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-        if(!$name||!$email||!$mobile||!$password){
+        if (!$name || !$email || !$mobile || !$password) {
             return [
                 'message' => 'Заполните поля',
                 'status' => 400
@@ -40,12 +40,12 @@ class Controller
         ];
     }
 
-    public function singIn()
+    public function singIn():array
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-        if(!$email||!$password){
+        if (!$email || !$password) {
             return [
                 'message' => 'Заполните поля',
                 'status' => 400
@@ -60,15 +60,19 @@ class Controller
             ];
         }
 
-        if(!password_verify($password,$existingUser->password)){
+        if (!password_verify($password, $existingUser->password)) {
             return [
                 'message' => 'Неверный логин или пароль',
                 'status' => 403
             ];
-
         }
 
-        $this->userRepository->insertToken($existingUser->id);
+        $token =  $this->userRepository->insertToken($existingUser->id);
+        $_COOKIE["token"] = $token;
+
+
+
+        header("Location: page.php");
 
         //TODO Вернуть токен или записать его в куки
         return [

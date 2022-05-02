@@ -15,7 +15,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
     $error = $result['message'];
     if ($_SERVER['CONTENT_TYPE'] == 'application/json') {
         header('Content-Type: application/json');
-        $res = ['error' =>['message'=>$error]];
+        $res = ['error' => ['message' => $error]];
         http_response_code($result['status']);
         die(json_encode($res));
     }
@@ -38,7 +38,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
 </head>
 <body>
 <div class="container">
-    <p><?=$error?></p>
+    <p><?= $error ?></p>
     <form class="my-5" method="post" action="connect.php">
         <div class="mb-3">
             <label>Name</label>
@@ -57,7 +57,10 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
             <input type="password" class="form-control" name="password" autocomplete="off">
         </div>
 
-        <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+        <button type="submit" class="btn btn-primary" name="submit">Зарегестрироваться</button>
+        <button type="submit" class="btn btn-primary" name="submit"><a href="singIn.php"
+                                                                       style="color:white;text-decoration: none">Войти</a>
+        </button>
     </form>
 </div>
 
