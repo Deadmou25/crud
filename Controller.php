@@ -40,6 +40,7 @@ class Controller
         ];
     }
 
+
     public function singIn():array
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -72,7 +73,10 @@ class Controller
 
 
 
+
         header("Location: page.php");
+
+
 
         //TODO Вернуть токен или записать его в куки
         return [
